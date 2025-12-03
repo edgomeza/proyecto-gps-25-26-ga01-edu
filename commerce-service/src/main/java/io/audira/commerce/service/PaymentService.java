@@ -315,7 +315,7 @@ public class PaymentService {
     private boolean simulatePaymentGateway(ProcessPaymentRequest request) {
         // Simulate network delay
         try {
-            Thread.sleep(1000 + random.nextInt(2000)); // 1-3 seconds
+            Thread.sleep(1000L + random.nextInt(2000)); // 1-3 seconds
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
