@@ -33,6 +33,6 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.4.0.6343:sonar \
+        working-directory: ./commerce-service
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.4.0.6343:sonar \
             -Dsonar.projectKey=edgomeza_proyecto-gps-25-26-ga01-edu
