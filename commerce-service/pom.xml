@@ -15,6 +15,12 @@
     <version>1.0.0</version>
     <name>Commerce Service</name>
     <description>Service for store, cart, orders, and payments</description>
+    
+    <properties>
+        <sonar.organization>edgomeza</sonar.organization>
+        <sonar.projectKey>edgomeza_proyecto-gps-25-26-ga01-edu</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
 
     <dependencies>
         <dependency>
