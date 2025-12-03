@@ -1,5 +1,6 @@
 package io.audira.commerce.client;
 
+import io.audira.commerce.client.exceptions.UserClientException;
 import io.audira.commerce.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +67,7 @@ public class UserClient {
 
             if (user == null) {
                 log.error("Received null response from user service for userId: {}", userId);
-                throw new RuntimeException("User service returned null for userId: " + userId);
+                throw new UserClientException("User service returned null for userId: " + userId);
             }
 
             log.info("User information retrieved successfully: id={}, email={}, name={} {}",
@@ -76,20 +77,19 @@ public class UserClient {
         } catch (HttpClientErrorException e) {
             log.error("HTTP error fetching user information for userId: {}. Status: {}, Response: {}",
                     userId, e.getStatusCode(), e.getResponseBodyAsString(), e);
-            throw new RuntimeException("Failed to fetch user information for userId: " + userId +
-                    ". HTTP Status: " + e.getStatusCode(), e);
+            throw new UserClientException("Failed to fetch user information for userId: " + userId + ". HTTP Status: " + e.getStatusCode(), e);
 
         } catch (ResourceAccessException e) {
             log.error("Connection error accessing user service at {} for userId: {}. " +
                     "Please verify that community-service is running on the correct port.",
                     url, userId, e);
-            throw new RuntimeException("Cannot connect to user service at " + url +
-                    ". Please ensure community-service is running.", e);
+            throw new UserClientException("Cannot connect to user service at " + url, e);
 
         } catch (Exception e) {
             log.error("Unexpected error fetching user information for userId: {} from URL: {}",
                     userId, url, e);
-            throw new RuntimeException("Unexpected error fetching user information for userId: " + userId, e);
+            throw new UserClientException("Unexpected error fetching user information for userId: " + userId, e);
+       
         }
     }
 }
