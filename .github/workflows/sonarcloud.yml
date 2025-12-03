@@ -34,5 +34,4 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./commerce-service
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.4.0.6343:sonar \
-            -Dsonar.projectKey=edgomeza_proyecto-gps-25-26-ga01-edu
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=edgomeza_proyecto-gps-25-26-ga01-edu -Dsonar.organization=edgomeza
