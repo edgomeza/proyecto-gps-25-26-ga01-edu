@@ -12,6 +12,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import java.util.Map;
  *
  * @author Grupo GA01
  * @see RestTemplate
- * 
+ *
  */
 @Component
 @RequiredArgsConstructor
@@ -107,11 +108,11 @@ public class MusicCatalogClient {
     /**
      * Obtiene la información detallada de una canción por su identificador.
      * <p>
-     * Llama al endpoint {@code /songs/{songId}}. En caso de error, retorna {@code null}.
+     * Llama al endpoint {@code /songs/{songId}}. En caso de error, retorna un mapa vacío.
      * </p>
      *
      * @param songId ID de la canción (tipo {@link Long}) a buscar.
-     * @return Un {@link Map} con los atributos de la canción (ej. id, title, artistId). Retorna {@code null} si hay un error de comunicación o si la canción no existe.
+     * @return Un {@link Map} con los atributos de la canción (ej. id, title, artistId). Retorna un mapa vacío si hay un error de comunicación o si la canción no existe.
      */
     public Map<String, Object> getSongById(Long songId) {
         String url = catalogServiceUrl + "/songs/" + songId;
@@ -124,21 +125,25 @@ public class MusicCatalogClient {
                     null,
                     new ParameterizedTypeReference<Map<String, Object>>() {}
             );
-            return response.getBody();
+            
+            Map<String, Object> body = response.getBody();
+            // Retorna el cuerpo o un mapa vacío si el cuerpo es null
+            return body != null ? body : Collections.emptyMap(); 
         } catch (Exception e) {
             log.error("Error fetching song {} from catalog service", songId, e);
-            return null;
+            // Retorna un mapa vacío en caso de excepción
+            return Collections.emptyMap(); 
         }
     }
 
     /**
      * Obtiene la información detallada de un álbum por su identificador.
      * <p>
-     * Llama al endpoint {@code /albums/{albumId}}. En caso de error, retorna {@code null}.
+     * Llama al endpoint {@code /albums/{albumId}}. En caso de error, retorna un mapa vacío.
      * </p>
      *
      * @param albumId ID del álbum (tipo {@link Long}) a buscar.
-     * @return Un {@link Map} con los atributos del álbum (ej. id, title, artistId). Retorna {@code null} si hay un error de comunicación o si el álbum no existe.
+     * @return Un {@link Map} con los atributos del álbum (ej. id, title, artistId). Retorna un mapa vacío si hay un error de comunicación o si el álbum no existe.
      */
     public Map<String, Object> getAlbumById(Long albumId) {
         String url = catalogServiceUrl + "/albums/" + albumId;
@@ -151,10 +156,14 @@ public class MusicCatalogClient {
                     null,
                     new ParameterizedTypeReference<Map<String, Object>>() {}
             );
-            return response.getBody();
+            
+            Map<String, Object> body = response.getBody();
+            // Retorna el cuerpo o un mapa vacío si el cuerpo es null
+            return body != null ? body : Collections.emptyMap(); 
         } catch (Exception e) {
             log.error("Error fetching album {} from catalog service", albumId, e);
-            return null;
+            // Retorna un mapa vacío en caso de excepción
+            return Collections.emptyMap(); 
         }
     }
 
@@ -165,14 +174,14 @@ public class MusicCatalogClient {
      * </p>
      *
      * @param songId ID de la canción (tipo {@link Long}) a buscar.
-     * @return Un {@link Map} con "artistId" y "price" o {@code null} si hay un error.
+     * @return Un {@link Map} con "artistId" y "price" o un mapa vacío si hay un error.
      */
     public Map<String, Object> getSongDetailsForCommerce(Long songId) {
         String url = catalogServiceUrl + "/songs/" + songId + "/details/commerce";
 
         try {
             log.debug("Fetching commerce details for song {} from URL: {}", songId, url);
-            
+
             // Usamos exchange para asegurarnos de que el tipo de retorno sea Map<String, Object>
             ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                     url,
@@ -180,14 +189,19 @@ public class MusicCatalogClient {
                     null,
                     new ParameterizedTypeReference<Map<String, Object>>() {}
             );
-            return response.getBody();
             
+            Map<String, Object> body = response.getBody();
+            // Retorna el cuerpo o un mapa vacío si el cuerpo es null
+            return body != null ? body : Collections.emptyMap(); 
+
         } catch (HttpClientErrorException.NotFound e) {
             log.warn("Song not found for commerce details: {}", songId);
-            return null;
+            // Retorna un mapa vacío cuando la canción no se encuentra (404)
+            return Collections.emptyMap(); 
         } catch (Exception e) {
             log.error("Error fetching commerce details for song {}: {}", songId, e.getMessage());
-            return null;
+            // Retorna un mapa vacío en caso de cualquier otra excepción
+            return Collections.emptyMap(); 
         }
     }
 }
