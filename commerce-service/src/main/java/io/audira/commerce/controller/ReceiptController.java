@@ -21,8 +21,7 @@ import java.util.Map;
  * @author Grupo GA01
  * @see ReceiptService
  * @see ReceiptDTO
- * 
- */
+ * */
 @RestController
 @RequestMapping("/api/receipts")
 @RequiredArgsConstructor
@@ -44,7 +43,7 @@ public class ReceiptController {
      * @return {@link ResponseEntity} que contiene el objeto {@link ReceiptDTO} (200 OK) si el recibo se encuentra, o un mensaje de error (404 NOT FOUND) si no existe.
      */
     @GetMapping("/payment/{paymentId}")
-    public ResponseEntity<?> getReceiptByPaymentId(@PathVariable Long paymentId) {
+    public ResponseEntity<Object> getReceiptByPaymentId(@PathVariable Long paymentId) {
         try {
             log.info("GET /api/receipts/payment/{} - Fetching receipt", paymentId);
             ReceiptDTO receipt = receiptService.getReceiptByPaymentId(paymentId);
@@ -68,7 +67,7 @@ public class ReceiptController {
      * @return {@link ResponseEntity} que contiene el objeto {@link ReceiptDTO} (200 OK) si el recibo se encuentra, o un mensaje de error (404 NOT FOUND) si no existe.
      */
     @GetMapping("/transaction/{transactionId}")
-    public ResponseEntity<?> getReceiptByTransactionId(@PathVariable String transactionId) {
+    public ResponseEntity<Object> getReceiptByTransactionId(@PathVariable String transactionId) {
         try {
             log.info("GET /api/receipts/transaction/{} - Fetching receipt", transactionId);
             ReceiptDTO receipt = receiptService.getReceiptByTransactionId(transactionId);
@@ -94,7 +93,7 @@ public class ReceiptController {
      * @return {@link ResponseEntity} que contiene el objeto {@link ReceiptDTO} generado (200 OK) o un mensaje de error (400 BAD REQUEST) si el pago no es apto para generar un recibo.
      */
     @PostMapping("/generate/{paymentId}")
-    public ResponseEntity<?> generateReceipt(@PathVariable Long paymentId) {
+    public ResponseEntity<Object> generateReceipt(@PathVariable Long paymentId) {
         try {
             log.info("POST /api/receipts/generate/{} - Generating receipt", paymentId);
             ReceiptDTO receipt = receiptService.generateReceipt(paymentId);
