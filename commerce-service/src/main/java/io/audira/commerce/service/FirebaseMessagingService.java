@@ -29,12 +29,16 @@ import java.util.Map;
  *
  * @author Grupo GA01
  * @see FirebaseMessaging
- * 
- */
+ * */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class FirebaseMessagingService {
+
+    /**
+     * Constante para la clave del ID de referencia en el payload de datos de la notificación.
+     */
+    private static final String REFERENCE_ID_KEY = "referenceId";
 
     private final FcmTokenRepository fcmTokenRepository;
 
@@ -79,8 +83,8 @@ public class FirebaseMessagingService {
         } catch (IOException e) {
             isFirebaseInitialized = false;
             log.error("❌ Failed to initialize Firebase Admin SDK: {}", e.getMessage());
-            log.warn("⚠️  FCM notifications will NOT work without proper Firebase configuration.");
-            log.warn("⚠️  Please ensure firebase-service-account.json exists in src/main/resources/");
+            log.warn("⚠️  FCM notifications will NOT work without proper Firebase configuration.");
+            log.warn("⚠️  Please ensure firebase-service-account.json exists in src/main/resources/");
         }
     }
 
@@ -116,7 +120,7 @@ public class FirebaseMessagingService {
             List<FcmToken> tokens = fcmTokenRepository.findByUserId(userId);
 
             if (tokens.isEmpty()) {
-                log.warn("⚠️  No FCM tokens found for user {}", userId);
+                log.warn("⚠️  No FCM tokens found for user {}", userId);
                 return false;
             }
 
@@ -171,7 +175,7 @@ public class FirebaseMessagingService {
             Map<String, String> data = new HashMap<>();
             data.put("type", type);
             if (referenceId != null) {
-                data.put("referenceId", referenceId.toString());
+                data.put(REFERENCE_ID_KEY, referenceId.toString());
             }
             if (referenceType != null) {
                 data.put("referenceType", referenceType);
@@ -247,7 +251,7 @@ public class FirebaseMessagingService {
         }
 
         if (tokens.isEmpty()) {
-            log.warn("⚠️  No tokens provided for multicast message");
+            log.warn("⚠️  No tokens provided for multicast message");
             return;
         }
 
@@ -256,7 +260,7 @@ public class FirebaseMessagingService {
             Map<String, String> data = new HashMap<>();
             data.put("type", type);
             if (referenceId != null) {
-                data.put("referenceId", referenceId.toString());
+                data.put(REFERENCE_ID_KEY, referenceId.toString());
             }
             if (referenceType != null) {
                 data.put("referenceType", referenceType);
@@ -333,7 +337,7 @@ public class FirebaseMessagingService {
             Map<String, String> data = new HashMap<>();
             data.put("type", type);
             if (referenceId != null) {
-                data.put("referenceId", referenceId.toString());
+                data.put(REFERENCE_ID_KEY, referenceId.toString());
             }
             if (referenceType != null) {
                 data.put("referenceType", referenceType);
